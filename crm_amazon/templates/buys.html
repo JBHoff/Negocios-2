@@ -1,0 +1,15 @@
+<h2>Compras</h2> 
+<form method="post"> 
+    Email cliente: <input name="email"> 
+    Producto: <input name="producto"> 
+    Precio: <input name="precio"> 
+    <button>Guardar</button> 
+</form> 
+ 
+<ul> 
+{% for c in compras %} 
+    <li>{{ c.producto }} - ${{ c.precio }}</li> 
+{% endfor %} 
+</ul> 
+ 
+<a href="/dashboard">Volver</a>

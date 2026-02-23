@@ -1,0 +1,25 @@
+<h2> Chat CRM</h2> 
+ 
+<div id="chat" style="border:1px solid #ccc; height:300px; overflow:auto;"></div> 
+ 
+<input id="mensaje"> 
+<button onclick="enviar()">Enviar</button> 
+ 
+<script> 
+function enviar() { 
+    let m = document.getElementById("mensaje").value; 
+ 
+    fetch("/chatbot", { 
+        method: "POST", 
+        headers: {"Content-Type": "application/x-www-form-urlencoded"}, 
+        body: "mensaje=" + m 
+    }) 
+    .then(r => r.json()) 
+    .then(d => { 
+        document.getElementById("chat").innerHTML += 
+        "<p><b>Tú:</b> " + m + "</p><p><b>Bot:</b> " + d.respuesta + "</p>"; 
+        document.getElementById("mensaje").value = ""; 
+    }); 
+} 
+</script> 
+<a href="/dashboard">Volver</a>

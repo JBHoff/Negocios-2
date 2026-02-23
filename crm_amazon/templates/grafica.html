@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gráfica</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<h2>Compras por cliente</h2>
+
+<canvas id="myChart"></canvas>
+
+<script>
+    const ctx = document.getElementById('myChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ labels | tojson }},
+            datasets: [{
+                label: 'Compras',
+                data: {{ values | tojson }},
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    }
+    );
+</script>
+
+<a href="/dashboard">Volver</a>
+
+</body>
+</html>

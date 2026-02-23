@@ -1,0 +1,15 @@
+<h2>Clientes</h2> 
+<form method="post"> 
+    Nombre: <input name="nombre"> 
+    Email: <input name="email"> 
+    Teléfono: <input name="telefono"> 
+    Dirección: <input name="direccion"> 
+    <button>Guardar</button> 
+</form>
+<ul> 
+{% for c in clientes %} 
+    <li>{{ c.nombre }} - {{ c.email }}</li> 
+{% endfor %} 
+</ul> 
+ 
+<a href="/dashboard">Volver</a> 
