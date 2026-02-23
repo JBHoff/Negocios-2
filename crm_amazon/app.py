@@ -50,7 +50,7 @@ def dashboard():
         return redirect("/")
     total_clientes = clients.count_documents({})
     total_compras = buys.count_documents({})
-    ingresos = sum([c.get["precio",0] for c in buys.find()])
+    ingresos = sum(float(c.get("precio", 0)) for c in buys.find())
     pipeline = [
         {"$group":{"_id":"$cliente_email","total":{"$sum":1}}},
         {"$sort":{"total":-1}}, {"$limit":1}
@@ -93,7 +93,7 @@ def buy_view():
             "precio":request.form["precio"],
             "fecha":datetime.now().strftime("%Y-%m-%d")
         })
-        return redirect("/compras")
+        return redirect("/buys")
     return render_template("buys.html", buys=buys.find())
 
 #Grafixa 

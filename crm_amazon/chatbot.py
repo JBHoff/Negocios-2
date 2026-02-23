@@ -7,7 +7,7 @@ compras = db["compras"]
 def responder(mensaje):
     mensaje = mensaje.lower()
 
-    if "Ey" in mensaje:
+    if "ey" in mensaje:
         return "Ey folk, how can I help you?"
     if "compras" in mensaje:
         total = compras.count_documents({})

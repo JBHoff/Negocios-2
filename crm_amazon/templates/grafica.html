@@ -16,10 +16,10 @@
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: {{ labels | tojson }},
+            labels: [{ labels , tojson }],
             datasets: [{
                 label: 'Compras',
-                data: {{ values | tojson }},
+                data: [{ values , tojson }],
                 borderWidth: 1
             }]
         },
