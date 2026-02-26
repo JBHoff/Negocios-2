@@ -1,4 +1,4 @@
-from flask import Flask, render_template,request, redirect, session, flash
+from flask import Flask, render_template,request, redirect, session, flash, jsonify
 from pymongo import MongoClient
 from datetime import datetime
 from chatbot import responder
@@ -21,12 +21,32 @@ if users.count_documents({}) == 0:
     "Usuario":"admin","password":"1234","rol":"admin"
 })
 
+@app.route("/")
+def inicio():
+    return redirect("/portal_cliente")
+
+@app.route("/portal_cliente", methods=["GET", "POST"])
+def portal_cliente():
+
+    if request.method == "POST":
+        clients.insert_one({
+            "nombre": request.form["nombre"],
+            "email": request.form["email"],
+            "telefono": request.form["telefono"],
+            "direccion": request.form["direccion"],
+            "empresa": request.form["empresa"]
+        })
+
+        return redirect("/portal_cliente?success=1")
+
+    return render_template("portal_cliente.html")
+
 #Login
-@app.route("/", methods=["GET", "POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         user = users.find_one({
-            "Usuario": request.form["Usuario"],
+            "Usuario": request.form["usuario"],
             "password": request.form["password"]
         })
 
@@ -126,14 +146,12 @@ def grafica():
 #Chat
 @app.route("/chat") 
 def chat(): 
-    if "Usuario" not in session: 
-        return redirect("/") 
     return render_template("chat.html") 
 @app.route("/chatbot", methods=["POST"]) 
 def chatbot(): 
     mensaje = request.form["mensaje"] 
     respuesta = responder(mensaje) 
-    return {"respuesta": respuesta} 
+    return jsonify({"respuesta": respuesta}) 
 
 if __name__ == "__main__": 
     app.run(debug=True, use_reloader=False)

@@ -1,10 +1,125 @@
-<h2>Dashboard CRM</h2> 
-<p>Total clientes: {{ total_clientes }}</p> 
-<p>Total compras: {{ total_compras }}</p> 
-<p>Ingresos: ${{ ingresos }}</p> 
-<p>Cliente frecuente: {{ cliente_frecuente }}</p> 
-<a href="/clients">Clientes</a><br> 
-<a href="/buys">Compras</a><br> 
-<a href="/grafica">Gráfica</a><br> 
-<a href="/chat">   Chat</a><br> 
-<a href="/logout">Salir</a>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard Zegucom</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: #1e3a8a;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            width: 90%;
+            margin: 30px auto;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .card p {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #1e3a8a;
+        }
+
+        .menu {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .menu a {
+            text-decoration: none;
+            margin: 10px;
+            padding: 10px 20px;
+            background: #1e3a8a;
+            color: white;
+            border-radius: 6px;
+            transition: 0.3s;
+        }
+
+        .menu a:hover {
+            background: #2563eb;
+        }
+
+        .logout {
+            background: #dc2626 !important;
+        }
+
+        .logout:hover {
+            background: #b91c1c !important;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>📊 Dashboard Zegucom</h1>
+</header>
+
+<div class="container">
+
+    <div class="cards">
+        <div class="card">
+            <h3>Total Clientes</h3>
+            <p>{{ total_clientes }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Compras</h3>
+            <p>{{ total_compras }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Ingresos Totales</h3>
+            <p>${{ ingresos }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Cliente Frecuente</h3>
+            <p>{{ cliente_frecuente }}</p>
+        </div>
+    </div>
+
+    <div class="menu">
+        <a href="/clients">Clientes</a>
+        <a href="/buys">Compras</a>
+        <a href="/chat">Chat</a>
+        <a href="/grafica">Gráfica</a>
+        <a href="/logout" class="logout">Salir</a>
+    </div>
+
+</div>
+
+</body>
+</html>

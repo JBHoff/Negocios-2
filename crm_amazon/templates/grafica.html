@@ -1,41 +1,119 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Gráfica</title>
+    <meta charset="UTF-8">
+    <title>Gráfica - Zegucom</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: #1e3a8a;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 40px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        canvas {
+            max-height: 450px;
+        }
+
+        .volver {
+            display: inline-block;
+            margin-top: 30px;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: #6b7280;
+            color: white;
+            border-radius: 6px;
+            transition: 0.3s;
+        }
+
+        .volver:hover {
+            background: #4b5563;
+        }
+    </style>
 </head>
 <body>
 
-<h2>Compras por cliente</h2>
+<header>
+    <h1>📊 Reporte de Ventas</h1>
+</header>
 
-<canvas id="myChart"></canvas>
+<div class="container">
+
+    <div class="card">
+        <h2>Distribución de Ventas por Cliente</h2>
+        <canvas id="myChart"
+                data-labels='{{ labels | tojson }}'
+                data-values='{{ values | tojson }}'>
+        </canvas>
+    </div>
+
+    <a href="/dashboard" class="volver">⬅ Volver al Dashboard</a>
+
+</div>
 
 <script>
-    const ctx = document.getElementById('myChart').getContext('2d');
+const canvas = document.getElementById('myChart');
+const labels = JSON.parse(canvas.getAttribute('data-labels') || '[]');
+const values = JSON.parse(canvas.getAttribute('data-values') || '[]');
 
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: [{ labels , tojson }],
-            datasets: [{
-                label: 'Compras',
-                data: [{ values , tojson }],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
+new Chart(canvas, {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Cantidad de Compras',
+            data: values,
+            backgroundColor: 'rgba(30, 58, 138, 0.6)',
+            borderColor: 'rgba(30, 58, 138, 1)',
+            borderWidth: 2,
+            borderRadius: 6
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                labels: {
+                    font: { size: 14 }
                 }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: { display: false }
             }
         }
     }
-    );
+});
 </script>
-
-<a href="/dashboard">Volver</a>
 
 </body>
 </html>

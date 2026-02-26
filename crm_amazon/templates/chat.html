@@ -1,25 +1,144 @@
-<h2> Chat CRM</h2> 
- 
-<div id="chat" style="border:1px solid #ccc; height:300px; overflow:auto;"></div> 
- 
-<input id="mensaje"> 
-<button onclick="enviar()">Enviar</button> 
- 
-<script> 
-function enviar() { 
-    let m = document.getElementById("mensaje").value; 
- 
-    fetch("/chatbot", { 
-        method: "POST", 
-        headers: {"Content-Type": "application/x-www-form-urlencoded"}, 
-        body: "mensaje=" + m 
-    }) 
-    .then(r => r.json()) 
-    .then(d => { 
-        document.getElementById("chat").innerHTML += 
-        "<p><b>Tú:</b> " + m + "</p><p><b>Bot:</b> " + d.respuesta + "</p>"; 
-        document.getElementById("mensaje").value = ""; 
-    }); 
-} 
-</script> 
-<a href="/dashboard">Volver</a>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat CRM - Zegucom</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: #1e3a8a;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 700px;
+            margin: 30px auto;
+        }
+
+        .chat-box {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            height: 400px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+
+        .mensaje {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 75%;
+        }
+
+        .usuario {
+            background: #1e3a8a;
+            color: white;
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .bot {
+            background: #e5e7eb;
+            color: #111;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background: #1e3a8a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        .volver {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: #6b7280;
+            color: white;
+            border-radius: 6px;
+            transition: 0.3s;
+        }
+
+        .volver:hover {
+            background: #4b5563;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🤖 Chat CRM Zegucom</h1>
+</header>
+
+<div class="container">
+
+    <div id="chat" class="chat-box"></div>
+
+    <div class="input-area">
+        <input id="mensaje" placeholder="Escribe tu mensaje..." onkeypress="if(event.key==='Enter'){ enviar(); }">
+        <button onclick="enviar()">Enviar</button>
+    </div>
+
+    <a href="/dashboard" class="volver">⬅ Volver al Dashboard</a>
+
+</div>
+
+<script>
+function enviar() {
+    let m = document.getElementById("mensaje").value;
+
+    if(m.trim() === "") return;
+
+    fetch("/chatbot", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "mensaje=" + encodeURIComponent(m)
+    })
+    .then(r => r.json())
+    .then(d => {
+
+        let chat = document.getElementById("chat");
+
+        chat.innerHTML += `
+            <div class="mensaje usuario"><b>Tú:</b> ${m}</div>
+            <div class="mensaje bot"><b>Bot:</b> ${d.respuesta}</div>
+        `;
+
+        chat.scrollTop = chat.scrollHeight;
+        document.getElementById("mensaje").value = "";
+    });
+}
+</script>
+
+</body>
+</html>
