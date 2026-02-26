@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session, flash 
 from pymongo import MongoClient 
 from datetime import datetime 
+import json
 app = Flask(__name__) 
 app.secret_key = "crm_secreto" 
  
@@ -19,9 +20,28 @@ if usuarios.count_documents({}) == 0:
         "password": "1234", 
         "rol": "admin" 
     }) 
+@app.route("/")
+def inicio():
+    return redirect("/portal_cliente")
+
+@app.route("/portal_cliente", methods=["GET", "POST"])
+def portal_cliente():
+
+    if request.method == "POST":
+        clientes.insert_one({
+            "nombre": request.form["nombre"],
+            "email": request.form["email"],
+            "telefono": request.form["telefono"],
+            "direccion": request.form["direccion"],
+            "empresa": request.form["empresa"]
+        })
+
+        return redirect("/portal_cliente?success=1")
+
+    return render_template("portal_cliente.html")
  
 # ---------- LOGIN ---------- 
-@app.route("/", methods=["GET", "POST"]) 
+@app.route("/login", methods=["GET", "POST"]) 
 def login(): 
     if request.method == "POST": 
         user = usuarios.find_one({ 
@@ -93,10 +113,11 @@ def registrar_compras():
         return redirect("/") 
  
     if request.method == "POST": 
+        precio = request.form["precio"].replace(",", "")
         compras.insert_one({ 
             "cliente_email": request.form["email"], 
             "producto": request.form["producto"], 
-            "precio": float(request.form["precio"]), 
+            "precio": float(precio), 
             "fecha": datetime.now().strftime("%Y-%m-%d") 
         }) 
         return redirect("/compras") 
@@ -109,14 +130,21 @@ def grafica():
     if "usuario" not in session: 
         return redirect("/") 
  
-    pipeline = [ 
-        {"$group": {"_id": "$cliente_email", "total": {"$sum": 1}}} 
-    ] 
-    data = list(compras.aggregate(pipeline)) 
- 
-    labels = [d["_id"] for d in data] 
-    values = [d["total"] for d in data] 
- 
-    return render_template("grafica.html", labels=labels, values=values) 
+    data = compras.aggregate([
+        {"$group": {"_id": "$cliente_email", "total": {"$sum": 1}}}
+    ])
+
+    labels = []
+    values = []
+
+    for item in data:
+        labels.append(item["_id"])
+        values.append(item["total"])
+
+    return render_template(
+        "grafica.html",
+        labels=json.dumps(labels),
+        values=json.dumps(values)
+    )
 if __name__ == "__main__": 
     app.run(debug=True)
